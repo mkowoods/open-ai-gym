@@ -5,10 +5,14 @@ import json
 
 
 
+#TODO: add experience replay to the model to train on de-correlated examples
+
 
 class TesnorFlowModel:
     pass
 
+
+#need to add exerience replay
 
 class FeedForwardBrain:
 
@@ -18,8 +22,8 @@ class FeedForwardBrain:
         self.action_space_size = env.action_space.n
         self.learning_rate = learning_rate
         self.gamma = 0.9
-        self.eps = 0.03
-        self.num_episodes = 4000
+        self.eps = 0.6
+        self.num_episodes = 10000
         self.max_steps_per_episode = 100
         self.reward_history = []
         self.step_history = []
@@ -69,6 +73,7 @@ class FeedForwardBrain:
 
                     # with prob eps choose and action from the space at random
                     if np.random.random() < self.eps:
+                        #print 'chose random action'
                         action = self.env.action_space.sample()
 
                     # get new state, reward and other data after taking action
@@ -90,15 +95,17 @@ class FeedForwardBrain:
                     # env.render()
                     total_reward += reward
                     if is_done:
-                        #eps = 1.0 / ((i / 50.0) + 10)  # reduce the chance of taking a random action only in instances where the model completes
+                        #eps = 0.03 * (1.0 - sum(self.reward_history[-100:]) / 100.0)
+                        self.eps = (60 - i)/100.0 if i < 60 else 0.01  # reduce the chance of taking a random action only in instances where the model completes
                         break  # break out of the loop
                 self.reward_history.append(total_reward)
                 self.step_history.append(steps)
 
 
-                if (i % 100 == 0) and i > 99:
-                    print 'episode', i, 'total reward', sum(self.reward_history[-100:]) / 100.0, 'steps', sum(self.step_history[-100:]) / 100.0
-
+                if (i % 500 == 0) and i > 99:
+                    print 'episode', i, 'total reward', sum(self.reward_history[-100:]) / 100.0, 'steps', sum(self.step_history[-100:]) / 100.0, 'eps:', self.eps
+                    print Q_score
+            self.model.saver.save(sess, "./tf_checkpts/model.ckpt")
 
 if __name__ == "__main__":
     import gym
