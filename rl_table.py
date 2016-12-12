@@ -1,7 +1,13 @@
 import numpy as np
 import gym
 
+
+
 """
+Solved: after 1100 steps.
+Implementation of SARSA...
+
+
 SFFF       (S: starting point, safe)
 FHFH       (F: frozen surface, safe)
 FFFH       (H: hole, fall to your doom)
@@ -33,7 +39,6 @@ class RLTable:
 
 
     def train(self):
-        beat_benchmark = False
         for epoch in range(self.num_episodes):
             state = self.env.reset()
             steps = 0
@@ -41,17 +46,7 @@ class RLTable:
             while steps < self.max_steps_per_episode:
                 steps += 1
 
-                # if beat_benchmark:
-                #     action = np.argmax(self.table[state])
-                #     state_prime, reward, is_done, info = self.env.step(action)
-                #     if is_done:
-                #         break
-                #     else:
-                #         state = state_prime
-                #         continue
-
                 if np.random.random() < self.eps:
-                    #print 'taking random action'
                     action = self.env.action_space.sample()
                 else:
                     action = np.argmax(self.table[state])
@@ -59,15 +54,14 @@ class RLTable:
                 state_prime, reward, is_done, info = self.env.step(action)
                 maxQ = np.max(self.table[state_prime])
 
-                #print (state, action), epoch, steps,  reward, maxQ
                 if is_done and (reward < 0.001):
                     reward = -1.0
-                self.table[state, action] += self.learning_rate * (((reward - 0.1) + (self.gamma * maxQ)) - self.table[state, action]) #added a living penlaty of 0.05
+
+                self.table[state, action] += self.learning_rate * (((reward - 0.1) + (self.gamma * maxQ)) - self.table[state, action])
                 state = state_prime
                 if is_done:
-                    #self.eps = 60.0 /(epoch + 100.0)
                     break
-            #renormalize the table periodically
+
             self.reward_history.append(0.0 if reward < 0.0 else reward)
             if sum(self.reward_history[-100:])/100.0 > 0.78:
                 print 'epoch: ', epoch, 'beat benchmark', sum(self.reward_history[-100:])/100.0
@@ -76,7 +70,7 @@ class RLTable:
 
             if (epoch % 100) == 0:
                 print 'epoch', epoch, sum(self.reward_history[-100:])/100.0, len(self.reward_history), self.eps
-                #print self.table
+
         print np.round(self.table, 5)
         print np.max(self.table), np.min(self.table)
         print sum(self.reward_history[-100:])/100.0
@@ -84,8 +78,6 @@ class RLTable:
         self.env.monitor.close()
 
 if __name__ == "__main__":
-    #solved: https://gym.openai.com/evaluations/eval_Phjwe0DpSciTixagE0yUZg
-    # the above model is trained to solve the below problem
     env = gym.make('FrozenLake-v0')
     table = RLTable(env, 'FrozenLake-v0-2')
     table.train()
