@@ -4,7 +4,8 @@ import gym
 
 
 """
-Solved: after 1100 steps.
+Solved Frozen Lake: after 1100 steps.
+Solved Taxi-v1: after 500 steps
 Implementation of SARSA...
 
 
@@ -23,19 +24,28 @@ HFFG       (G: goal, where the frisbee is located)
 
 class RLTable:
 
-    def __init__(self, env, monitor_path):
+    def __init__(self,
+                 env,
+                 monitor_path,
+                 step_penalty = 0.1,
+                 learning_rate = 0.25,
+                 gamma = 0.99,
+                 eps = 0.025,
+                 num_episodes = 5000
+                 ):
         self.env = env
-        self.states = 16
-        self.actions = 4
+        self.states = env.observation_space.n
+        self.actions = env.action_space.n
         self.table = np.zeros((self.states, self.actions))
-        self.learning_rate = 0.05
-        self.gamma = 0.9
-        self.eps = 0.025
-        self.num_episodes = 5000
+        self.step_penalty = step_penalty
+        self.learning_rate = learning_rate
+        self.gamma = gamma
+        self.eps = eps
+        self.num_episodes = num_episodes
         self.max_steps_per_episode = 100
         self.reward_history = []
         self.path_to_recording = './tmp/'+monitor_path
-        self.env.monitor.start(self.path_to_recording)
+        self.env.monitor.start(self.path_to_recording, force  = True)
 
 
     def train(self):
@@ -43,7 +53,9 @@ class RLTable:
             state = self.env.reset()
             steps = 0
             self.eps = 1.0 / (epoch + 1.0)
-            while steps < self.max_steps_per_episode:
+            #while steps < self.max_steps_per_episode:
+            total_reward_per_episode = 0.0
+            while 1:
                 steps += 1
 
                 if np.random.random() < self.eps:
@@ -52,21 +64,17 @@ class RLTable:
                     action = np.argmax(self.table[state])
 
                 state_prime, reward, is_done, info = self.env.step(action)
+                total_reward_per_episode += reward
                 maxQ = np.max(self.table[state_prime])
 
-                if is_done and (reward < 0.001):
-                    reward = -1.0
+                self.table[state, action] += self.learning_rate * (((reward - self.step_penalty) + (self.gamma * maxQ)) - self.table[state, action])
 
-                self.table[state, action] += self.learning_rate * (((reward - 0.1) + (self.gamma * maxQ)) - self.table[state, action])
                 state = state_prime
+
                 if is_done:
                     break
 
-            self.reward_history.append(0.0 if reward < 0.0 else reward)
-            if sum(self.reward_history[-100:])/100.0 > 0.78:
-                print 'epoch: ', epoch, 'beat benchmark', sum(self.reward_history[-100:])/100.0
-                beat_benchmark = True
-                self.learning_rate = 0.01
+            self.reward_history.append(total_reward_per_episode)
 
             if (epoch % 100) == 0:
                 print 'epoch', epoch, sum(self.reward_history[-100:])/100.0, len(self.reward_history), self.eps
@@ -78,6 +86,6 @@ class RLTable:
         self.env.monitor.close()
 
 if __name__ == "__main__":
-    env = gym.make('FrozenLake-v0')
-    table = RLTable(env, 'FrozenLake-v0-2')
+    env = gym.make('Taxi-v1')
+    table = RLTable(env, 'Taxi-v1-1', step_penalty=0.0)
     table.train()
