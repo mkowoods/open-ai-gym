@@ -11,10 +11,6 @@ random.seed(42)
 Implements a feedforward network (with one hidden layer)  with experience replace i.e. a DQN
 """
 
-#TODO: add experience replay to the model to train on de-correlated examples
-#TODO: add one hidden layer to the network
-#TODO: write code to persist the models and recall them. Log test resutsl for determining which architecture are performing well
-
 
 
 class TensorFlowFeedForwardModel:

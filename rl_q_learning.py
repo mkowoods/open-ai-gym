@@ -4,20 +4,10 @@ import gym
 
 
 """
+Implementation of SARSA Algorithm
+
 Solved Frozen Lake: after 1100 steps.
 Solved Taxi-v1: after 500 steps
-Implementation of SARSA...
-
-
-SFFF       (S: starting point, safe)
-FHFH       (F: frozen surface, safe)
-FFFH       (H: hole, fall to your doom)
-HFFG       (G: goal, where the frisbee is located)
-
-0, left
-1, down
-2, right
-3, up
 
 """
 
@@ -67,7 +57,7 @@ class RLTable:
                 total_reward_per_episode += reward
                 maxQ = np.max(self.table[state_prime])
 
-                self.table[state, action] += self.learning_rate * (((reward - self.step_penalty) + (self.gamma * maxQ)) - self.table[state, action])
+                self.table[state, action] += self.learning_rate * (((reward - self.step_penalty) + ( (self.gamma * maxQ)) - self.table[state, action] ))
 
                 state = state_prime
 

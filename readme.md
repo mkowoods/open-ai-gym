@@ -1,6 +1,40 @@
 
-#Launching Tensorboard
-tensorboard --logdir=./tmp/logs
+-------------
+#Description
+-------------
+
+
+Various solutions to Open AI Gym programs using different Reinforcement Learning and Deep Learning Approaches
+
+
+##Solutions with Descriptions
+-------------
+
+Below is a list of some of the projects and the solutions they implement
+
+* rl_q_learning.py
+ - Implementation of Q Learning Model Using Dynamic Programming, in which you have table that represents every 
+ state / action pair. 
+ - This model was able to solve several basic problems like FrozenLake and Taxi with minimal tuning.
+ 
+* cartpole - policy_gradient.ipynb
+ - Implementation of a Policy Gradient / Value Gradient
+ - The policy gradient is meant to learn overtime which action to take given an observed state, by comparing the true
+ observed reward for a given state to the expected reward. The value gradient is responsible for providing the estimate 
+ for the future reward. The PG is implementing a version of logistic regression and the VG uses a 2-layer regression NN
+ 
+ * cartpole - random_search.ipynb
+ - Uses random search to identify a set of weights such that heaviside_step_func( np.dot(state, weights) ), is able to 
+ beat the required benchmarks. This actually work pretty well for this task and you're able to quickly learn a set of weights
+ that can perform as well as more advance techniques
+ 
+ * cartpole - kmeans with q_learning.ipynb
+ - attempts to use kmean clustering to decrease the size of the state space so that a q learning model can be applied
+ - this was particularly successful
+ 
+ * deep_q_learning.py
+ 
+ * cartpole - dqn.ipynb
 
 #References
 
