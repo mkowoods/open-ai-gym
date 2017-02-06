@@ -4,7 +4,7 @@
 -------------
 
 
-Various solutions to Open AI Gym programs using different Reinforcement Learning and Deep Learning Approaches
+###Solutions to Open AI Gym programs using different Reinforcement Learning and Deep Learning Approaches
 
 
 ##Solutions with Descriptions
