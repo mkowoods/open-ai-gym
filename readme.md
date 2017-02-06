@@ -9,7 +9,7 @@
 
 ##Solutions with Descriptions
 
-Below is a list of some of the projects and the solutions they implement
+#####Below is a list of some of the projects in the repo
 
 * rl_q_learning.py
  - Implementation of Q Learning Model Using Dynamic Programming, in which you have table that represents every 
