@@ -22,7 +22,7 @@
  observed reward for a given state to the expected reward. The value gradient is responsible for providing the estimate 
  for the future reward. The PG is implementing a version of logistic regression and the VG uses a 2-layer regression NN
  
-* cartpole - random_search.ipynb
+* cartpole - random_search.ipynb (monte carlo)
  - Uses random search to identify a set of weights such that heaviside_step_func( np.dot(state, weights) ), is able to 
  beat the required benchmarks. This actually work pretty well for this task and you're able to quickly learn a set of weights
  that can perform as well as more advance techniques. Obviously would not scale to larger state space sizes
