@@ -31,9 +31,9 @@
  - attempts to use kmean clustering to decrease the size of the state space so that a q learning model can be applied
  - this was particularly successful
  
-* deep_q_learning.py
- 
 * cartpole - dqn.ipynb
+ - implement a version of deep q learning with experience replay
+ - the network takes an input of 
 
 #References
 

@@ -95,7 +95,7 @@ class FeedForwardBrain:
     def get_mini_batch(self):
 
         sample_idx = np.random.choice(len(self.replay_memory), self.BATCH_SIZE)
-
+        print self.replay_memory
         batch = np.array(self.replay_memory)[sample_idx]
 
         states_batch, action_batch, reward_batch, next_states_batch, done_batch = map(np.array, zip(*batch))
@@ -177,4 +177,6 @@ if __name__ == "__main__":
 
     brain = FeedForwardBrain(env)
     brain.train_model()
+    brain.replay_memory
+
 
